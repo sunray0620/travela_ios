@@ -6,6 +6,7 @@
 //
 
 import Testing
+@testable import travela_ios
 
 struct travela_iosTests {
 
