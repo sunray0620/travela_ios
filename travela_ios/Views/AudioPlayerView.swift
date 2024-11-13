@@ -5,7 +5,7 @@ import AVFoundation
 
 struct AudioPlayerView: View {
     
-    @State var isPlaying: Bool = false
+    @StateObject private var audioPlayer = AudioPlayer()
     @State var width: CGFloat = 300
     
     var body: some View {
@@ -45,15 +45,14 @@ struct AudioPlayerView: View {
                             .lineLimit(1)
                     }
                     VStack {
-                        Text("00:00")
+                        Text(getTimeString(from: audioPlayer.currentTime))
                             .font(.body)
                             .padding()
                         
                         HStack(spacing: 55) {
-                            
                             // Go Backward Button
                             Button(action: {
-                                print("go backward")
+                                audioPlayer.goBackward()
                             }) {
                                 Image(systemName: "gobackward.15")
                                     .font(.title)
@@ -64,9 +63,13 @@ struct AudioPlayerView: View {
                             
                             // Play / Pause Button
                             Button(action: {
-                                print("play / pause")
+                                if (audioPlayer.isPlaying) {
+                                    audioPlayer.pause()
+                                } else {
+                                    audioPlayer.play()
+                                }
                             }) {
-                                Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                                Image(systemName: audioPlayer.isPlaying ? "pause.fill" : "play.fill")
                                     .font(.title)
                                     .foregroundColor(Color.black)
                                     .padding()
@@ -76,7 +79,7 @@ struct AudioPlayerView: View {
                             
                             // Go Forward Button
                             Button(action: {
-                                print("go forward")
+                                audioPlayer.goForward()
                             }) {
                                 Image(systemName: "goforward.15")
                                     .font(.title)
@@ -90,16 +93,21 @@ struct AudioPlayerView: View {
                 }
             }
             .onAppear {
-                print("on appear")
                 do {
                     try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 } catch {
                     print ("error setting audio session category: \(error)")
                 }
                 
-                guard let url = URL(string: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") else { return }
+                audioPlayer.setup(url: "")
             }
         }
+    }
+    
+    func getTimeString(from time: TimeInterval) -> String {
+        let minutes = Int(time / 60)
+        let seconds = Int(time.truncatingRemainder(dividingBy: 60))
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 
