@@ -13,13 +13,18 @@ class AudioPlayer: ObservableObject {
     
     @Published var isPlaying: Bool = false
     @Published var currentTime: TimeInterval = 0
+    @Published var duration: TimeInterval = 0
     
     var player: AVPlayer?
     private var timeObserverToken: Any?
     
-    func setup(url: String) {
-        guard let url2 = Bundle.main.path(forResource: "canon_in_d", ofType: "mp3") else { return }
-        self.player = AVPlayer(url: URL(fileURLWithPath: url2))
+    func setup(url: URL) {
+
+        let playItem = AVPlayerItem(url: url)
+        self.player = AVPlayer(playerItem: playItem)
+        self.isPlaying = false
+        self.duration = (player?.currentItem?.asset.duration.seconds)!
+        
         self.setupRemoteControls()
     }
     

@@ -6,7 +6,17 @@ import AVFoundation
 struct AudioPlayerView: View {
     
     @StateObject private var audioPlayer = AudioPlayer()
-    @State var width: CGFloat = 300
+    @State var width: CGFloat = 301
+    
+    var audioTourId: String
+    var audioTourAudioFileUrl : URL
+    
+    init(audioTourId: String) {
+        self.audioTourId = audioTourId
+        AudioTourHelper.prepareAudioTour(audioTourId: audioTourId)
+        
+        self.audioTourAudioFileUrl = AudioTourHelper.getAudioTourFileUrl(audioTourId: audioTourId)
+    }
     
     var body: some View {
         NavigationView {
@@ -45,10 +55,17 @@ struct AudioPlayerView: View {
                             .lineLimit(1)
                     }
                     VStack {
-                        Text(getTimeString(from: audioPlayer.currentTime))
-                            .font(.body)
-                            .padding()
-                        
+                        HStack {
+                            Text(getTimeString(from: audioPlayer.currentTime))
+                                .font(.body)
+                                .padding()
+                            Text("/")
+                                .font(.body)
+                                .padding()
+                            Text(getTimeString(from: audioPlayer.duration))
+                                .font(.body)
+                                .padding()
+                        }
                         HStack(spacing: 55) {
                             // Go Backward Button
                             Button(action: {
@@ -99,7 +116,7 @@ struct AudioPlayerView: View {
                     print ("error setting audio session category: \(error)")
                 }
                 
-                audioPlayer.setup(url: "")
+                audioPlayer.setup(url: self.audioTourAudioFileUrl)
             }
         }
     }
@@ -113,5 +130,5 @@ struct AudioPlayerView: View {
 
 
 #Preview {
-    AudioPlayerView().preferredColorScheme(.dark)
+    AudioPlayerView(audioTourId: "lesunAudioTour").preferredColorScheme(.dark)
 }
