@@ -7,14 +7,13 @@ struct AudioPlayerView: View {
     
     @StateObject private var audioPlayer = AudioPlayer()
     @State var width: CGFloat = 301
+    @State private var isLoading: Bool = true
     
     var audioTourId: String
     var audioTourAudioFileUrl : URL
     
     init(audioTourId: String) {
         self.audioTourId = audioTourId
-        AudioTourHelper.prepareAudioTour(audioTourId: audioTourId)
-        
         self.audioTourAudioFileUrl = AudioTourHelper.getAudioTourFileUrl(audioTourId: audioTourId)
     }
     
@@ -40,7 +39,7 @@ struct AudioPlayerView: View {
                             .shadow(radius: 50)
                         
                         // Audio Name
-                        Text("明天")
+                        Text("明天你好")
                             .font(.title)
                             .fontWeight(.bold)
                             .padding(.top, 25)
@@ -59,7 +58,7 @@ struct AudioPlayerView: View {
                             Text(getTimeString(from: audioPlayer.currentTime))
                                 .font(.body)
                                 .padding()
-                            Text("/")
+                            Text("-")
                                 .font(.body)
                                 .padding()
                             Text(getTimeString(from: audioPlayer.duration))
@@ -107,16 +106,38 @@ struct AudioPlayerView: View {
                         }
                         .padding()
                     }
+                }.blur(radius: isLoading ? 20 : 0)
+                .animation(.easeInOut, value: isLoading)
+                
+                if isLoading {
+                    Color.black.opacity(0.7)
+                        .ignoresSafeArea()
+                    VStack {
+                        ProgressView()
+                            .scaleEffect(2.0)
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        Text("Contacting Your Travel Agent...")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.top, 10)
+                    }
+                    .padding(30)
+                    .background(Color.black.opacity(0.8))
+                    .cornerRadius(15)
+                    .shadow(radius: 10)
                 }
             }
             .onAppear {
                 do {
                     try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                    Task {
+                        await AudioTourHelper.prepareAudioTour(audioTourId: audioTourId)
+                        audioPlayer.setup(url: self.audioTourAudioFileUrl)
+                        isLoading = false
+                    }
                 } catch {
                     print ("error setting audio session category: \(error)")
                 }
-                
-                audioPlayer.setup(url: self.audioTourAudioFileUrl)
             }
         }
     }
@@ -130,5 +151,5 @@ struct AudioPlayerView: View {
 
 
 #Preview {
-    AudioPlayerView(audioTourId: "lesunAudioTour").preferredColorScheme(.dark)
+    AudioPlayerView(audioTourId: "1d07effb-1156-4104-bfe4-439ed88c89f3").preferredColorScheme(.dark)
 }

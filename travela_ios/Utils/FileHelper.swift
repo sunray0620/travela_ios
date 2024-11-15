@@ -53,7 +53,6 @@ class FileHelper {
         
         do {
             try data.write(to: fileUrl)
-            print("write to file: \(fileUrl.path)")
         } catch {
             print("Error writing file: \(error)")
         }
@@ -74,5 +73,13 @@ class FileHelper {
         } catch {
             print("Error deleting file : \(error)")
         }
+    }
+    
+    public static func isFileExists(path: URL) -> Bool {
+        return FileManager.default.fileExists(atPath: path.path)
+    }
+    
+    public static func isFolderExists(path: URL) -> Bool {
+        return FileManager.default.fileExists(atPath: path.path, isDirectory: nil)
     }
 }

@@ -11,24 +11,26 @@ class AudioTourHelper {
     
     static let audioFolderName: String = "audios"
     
-    public static func prepareAudioTour(audioTourId: String) {
+    public static func prepareAudioTour(audioTourId: String) async {
         // Check if we need to refresh the files
         if !checkIfNeedToRefreshAudioFiles(audioTourId: audioTourId) {
             return;
         }
         // Refresh all files
-        downloadAudioFile(audioTourId: audioTourId)
+        await downloadAudioFile(audioTourId: audioTourId)
     }
     
     private static func checkIfNeedToRefreshAudioFiles(audioTourId: String) -> Bool {
         return true
     }
     
-    public static func downloadAudioFile(audioTourId: String) {
-        if let path = Bundle.main.path(forResource: "canon_in_d", ofType: "mp3") {
-            let fileContent = FileHelper.readDataFile(fileUrl: URL(fileURLWithPath: path))
-            FileHelper.writeDataFile(fileUrl: getAudioTourFileUrl(audioTourId: audioTourId), data: fileContent)
+    public static func downloadAudioFile(audioTourId: String) async {
+        let localAudioFileUrl = getAudioTourFileUrl(audioTourId: audioTourId)
+        if FileHelper.isFileExists(path: localAudioFileUrl) {
+            print("The audio file is already downloaded.")
+            return
         }
+        await downloadFile(audioTourId: audioTourId)
     }
     
     public static func getAudioTourFileUrl(audioTourId: String) -> URL {
@@ -42,5 +44,24 @@ class AudioTourHelper {
     
     public static func getFileUrl(filePath: String) -> URL {
         return getRootDirectory().appendingPathComponent(filePath)
+    }
+    
+    public static func downloadFile(audioTourId: String) async {
+        var audio_url = "https://travela-336226198293.us-central1.run.app/audiointro/download_audio"
+        audio_url.append("?audio_tour_id=\(audioTourId)")
+        guard let url = URL(string: audio_url) else { return }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(for: URLRequest(url: url))
+            let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
+            if let jsonDict = jsonResponse as? [String: String] {
+                let audioContent = jsonDict["audioContent"]
+                if let data = Data(base64Encoded: audioContent!) {
+                    FileHelper.writeDataFile(fileUrl: getAudioTourFileUrl(audioTourId: audioTourId), data: data)
+                }
+            }
+        } catch {
+            print("Failed to download audio file.")
+        }
     }
 }

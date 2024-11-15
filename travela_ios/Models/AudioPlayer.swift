@@ -19,7 +19,6 @@ class AudioPlayer: ObservableObject {
     private var timeObserverToken: Any?
     
     func setup(url: URL) {
-
         let playItem = AVPlayerItem(url: url)
         self.player = AVPlayer(playerItem: playItem)
         self.isPlaying = false
