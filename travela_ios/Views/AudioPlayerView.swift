@@ -19,10 +19,14 @@ struct AudioPlayerView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Image("turtlerock")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .blur(radius: 60)
+                AsyncImage(url: self.audioTourViewModel?.imageFileUrl ?? URL(string: "")) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    ProgressView()
+                }
+                    .blur(radius: 80)
                     .offset(y: -300)
                     .edgesIgnoringSafeArea(.all)
                 
@@ -49,7 +53,7 @@ struct AudioPlayerView: View {
                             .padding(.horizontal)
                             .lineLimit(1)
                         
-                        Text("孙磊")
+                        Text(self.audioTourViewModel?.creator ?? "Creator")
                             .font(.title3)
                             .fontWeight(.light)
                             .padding(.top, 5)

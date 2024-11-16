@@ -34,7 +34,6 @@ class AudioTourHelper {
         audioTourViewModel.audioFileUrl = localAudioFileUrl
         
         if FileHelper.isFileExists(path: localAudioFileUrl) && FileHelper.isFileExists(path: localImageFileUrl) {
-            print("The files are already downloaded.")
             return
         }
         let imageGcsBlobName = "\(imageFolderName)/\(audioTourId).jpg"
