@@ -9,10 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        AudioPlayerView(audioTourId: "lesunAudioTour").preferredColorScheme(.dark)
+        AudioPlayerView(audioTourViewModel: allAudioTourViewModels[0]).preferredColorScheme(.dark)
     }
 }
 
 #Preview {
-    AudioPlayerView(audioTourId: "lesunAudioTour").preferredColorScheme(.dark)
+    AudioPlayerView(audioTourViewModel: allAudioTourViewModels[0]).preferredColorScheme(.dark)
 }

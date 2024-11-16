@@ -6,15 +6,14 @@ import AVFoundation
 struct AudioPlayerView: View {
     
     @StateObject private var audioPlayer = AudioPlayer()
-    @State var width: CGFloat = 301
+    @State var width: CGFloat = 300
     @State private var isLoading: Bool = true
+    @State private var audioTourViewModel : AudioTourViewModel?
     
-    var audioTourId: String
-    var audioTourAudioFileUrl : URL
+    private var originalAudioTourViewModel : AudioTourViewModel?
     
-    init(audioTourId: String) {
-        self.audioTourId = audioTourId
-        self.audioTourAudioFileUrl = AudioTourHelper.getAudioTourFileUrl(audioTourId: audioTourId)
+    init(audioTourViewModel : AudioTourViewModel) {
+        self.originalAudioTourViewModel = audioTourViewModel
     }
     
     var body: some View {
@@ -39,7 +38,7 @@ struct AudioPlayerView: View {
                             .shadow(radius: 50)
                         
                         // Audio Name
-                        Text("明天你好")
+                        Text(self.audioTourViewModel?.name ?? "Name")
                             .font(.title)
                             .fontWeight(.bold)
                             .padding(.top, 25)
@@ -131,8 +130,12 @@ struct AudioPlayerView: View {
                 do {
                     try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                     Task {
-                        await AudioTourHelper.prepareAudioTour(audioTourId: audioTourId)
-                        audioPlayer.setup(url: self.audioTourAudioFileUrl)
+                        if let originalAudioTourViewModel = self.originalAudioTourViewModel {
+                            var processedAudioTourViewModel = originalAudioTourViewModel
+                            await AudioTourHelper.prepareAudioTour(audioTourViewModel: &processedAudioTourViewModel)
+                            self.audioTourViewModel = processedAudioTourViewModel
+                            audioPlayer.setup(url: (self.audioTourViewModel?.audioFileUrl)!)
+                        }
                         isLoading = false
                     }
                 } catch {
@@ -149,7 +152,6 @@ struct AudioPlayerView: View {
     }
 }
 
-
 #Preview {
-    AudioPlayerView(audioTourId: "1d07effb-1156-4104-bfe4-439ed88c89f3").preferredColorScheme(.dark)
+    AudioPlayerView(audioTourViewModel: allAudioTourViewModels[2]).preferredColorScheme(.dark)
 }

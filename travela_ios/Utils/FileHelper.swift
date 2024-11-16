@@ -61,9 +61,9 @@ class FileHelper {
     public static func createFolder(folderUrl: URL) {
         do {
             try FileManager.default.createDirectory(at: folderUrl, withIntermediateDirectories: true, attributes: nil)
-            print("created directory : \(folderUrl.path)")
+            print("created directory: \(folderUrl.path)")
         } catch {
-            print("Error creating directory : \(error)")
+            print("Error creating directory: \(error)")
         }
     }
     
@@ -71,7 +71,7 @@ class FileHelper {
         do {
             try FileManager.default.removeItem(at: path)
         } catch {
-            print("Error deleting file : \(error)")
+            print("Error deleting file: \(error)")
         }
     }
     
