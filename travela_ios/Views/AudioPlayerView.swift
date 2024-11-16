@@ -29,9 +29,13 @@ struct AudioPlayerView: View {
                 VStack {
                     VStack {
                         // Audio Image
-                        Image("turtlerock")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
+                        AsyncImage(url: self.audioTourViewModel?.imageFileUrl ?? URL(string: "")) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            ProgressView()
+                        }
                             .frame(width: width, height: width)
                             .overlay(RoundedRectangle(cornerRadius: 150).stroke(Color.white, lineWidth: 4))
                             .cornerRadius(150)
