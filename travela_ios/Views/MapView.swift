@@ -12,12 +12,15 @@ struct MapView: View {
     var body: some View {
         AppleMapView()
         .sheet(isPresented: .constant(true), content: {
-            Text("Sheet Text")
+            VStack{}
                 .interactiveDismissDisabled()
                 .presentationBackgroundInteraction(.enabled)
-                .presentationDetents([.fraction(0.1), .fraction(0.5), .fraction(0.9)])
+                .presentationContentInteraction(.scrolls)
+                .presentationDetents([.fraction(0.1), .fraction(0.55), .fraction(1)])
                 .presentationDragIndicator(.visible)
                 .ignoresSafeArea()
+            
+            AudioTourListView(audioTourList: allAudioTourViewModels)
         })
     }
 }
