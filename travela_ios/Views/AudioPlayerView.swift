@@ -144,6 +144,7 @@ struct AudioPlayerView: View {
                             self.audioTourViewModel = processedAudioTourViewModel
                             audioPlayer.setup(url: (self.audioTourViewModel?.audioFileUrl)!)
                         }
+                        audioPlayer.play()
                         isLoading = false
                     }
                 } catch {

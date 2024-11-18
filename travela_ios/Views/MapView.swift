@@ -11,13 +11,15 @@ import MapKit
 struct MapView: View {
     static let smallSheet : PresentationDetent = .fraction(0.1)
     
-    @State private var selectedDetent: PresentationDetent = smallSheet
+    @State private var selectedDetent: PresentationDetent = .large
     @State var audioTourViewModels: [AudioTourViewModel] = allAudioTourViewModels
     
     var body: some View {
         AppleMapView()
         .sheet(isPresented: .constant(true), content: {
             VStack{
+                ButtonsBarView(selectedView: "map").padding(.top, 10).padding(.bottom, 0)
+                
                 AudioTourListView(audioTourList: audioTourViewModels, selectedDetent: $selectedDetent)
                     // .disabled(selectedDetent == MapView.smallSheet)
                     // .scrollDisabled(selectedDetent != .large)

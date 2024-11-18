@@ -36,7 +36,6 @@ struct AudioTourRowCard: View {
     
     var body: some View {
         HStack {
-            
             VStack(alignment: .leading) {
                 Text(audioTour.name)
                     .multilineTextAlignment(TextAlignment.leading)
@@ -51,8 +50,8 @@ struct AudioTourRowCard: View {
                     .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
             }
-            .frame(height: 100)
-            .padding()
+            // .frame(height: 100)
+            .padding(EdgeInsets(top: 15, leading: 16, bottom: 15, trailing: 16))
             .background(Color(.systemBackground))
             .edgesIgnoringSafeArea(.all)
             
@@ -152,5 +151,5 @@ struct AudioTourDetailView: View {
 }
 
 #Preview {
-    // AudioTourListView(audioTourList: allAudioTourViewModels, selectedDetent: .fraction(0.1))
+    // AudioTourListView(audioTourList: allAudioTourViewModels, selectedDetent: .init(id: "1"))
 }
