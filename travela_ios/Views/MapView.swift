@@ -19,8 +19,9 @@ struct MapView: View {
         .sheet(isPresented: .constant(true), content: {
             VStack{
                 AudioTourListView(audioTourList: allAudioTourViewModels, selectedDetent: $selectedDetent)
-                    .disabled(selectedDetent == MapView.smallSheet)
-                    .scrollDisabled(selectedDetent != .large)
+                    // .disabled(selectedDetent == MapView.smallSheet)
+                    // .scrollDisabled(selectedDetent != .large)
+                    .disabled(selectedDetent != .large)
                     .gesture(
                         DragGesture().onChanged { value in
                             if selectedDetent != .large && value.translation.height < 0 {
