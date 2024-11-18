@@ -10,6 +10,7 @@ import SwiftUI
 struct AudioTourListView: View {
     
     let audioTourList: [AudioTourViewModel]
+    @Binding var selectedDetent: PresentationDetent
         
     var body: some View {
         NavigationView {
@@ -18,7 +19,9 @@ struct AudioTourListView: View {
                     ForEach(audioTourList) { audioTour in
                         NavigationLink(destination: AudioTourDetailView(audioTour: audioTour)) {
                             AudioTourRowCard(audioTour: audioTour)
-                        }
+                        }.simultaneousGesture(TapGesture().onEnded {
+                            selectedDetent = .large
+                        })
                     }
                 }
             }
@@ -37,14 +40,15 @@ struct AudioTourRowCard: View {
             VStack(alignment: .leading) {
                 Text(audioTour.name)
                     .multilineTextAlignment(TextAlignment.leading)
-                    .font(.headline)
+                    .font(.body)
                     .padding(.bottom, 1)
+                    .foregroundColor(.primary)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                 
                 Text(audioTour.description)
                     .multilineTextAlignment(TextAlignment.leading)
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
             }
             .frame(height: 100)
@@ -148,5 +152,5 @@ struct AudioTourDetailView: View {
 }
 
 #Preview {
-    AudioTourListView(audioTourList: allAudioTourViewModels)
+    // AudioTourListView(audioTourList: allAudioTourViewModels, selectedDetent: .fraction(0.1))
 }
