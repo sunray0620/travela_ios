@@ -9,16 +9,16 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
-    
     static let smallSheet : PresentationDetent = .fraction(0.1)
     
     @State private var selectedDetent: PresentationDetent = smallSheet
+    @State var audioTourViewModels: [AudioTourViewModel] = allAudioTourViewModels
     
     var body: some View {
         AppleMapView()
         .sheet(isPresented: .constant(true), content: {
             VStack{
-                AudioTourListView(audioTourList: allAudioTourViewModels, selectedDetent: $selectedDetent)
+                AudioTourListView(audioTourList: audioTourViewModels, selectedDetent: $selectedDetent)
                     // .disabled(selectedDetent == MapView.smallSheet)
                     // .scrollDisabled(selectedDetent != .large)
                     .disabled(selectedDetent != .large)
@@ -41,8 +41,7 @@ struct MapView: View {
                 .presentationDetents([MapView.smallSheet, .medium, .large], selection: $selectedDetent)
                 .presentationDragIndicator(.visible)
                 .ignoresSafeArea()
-            
-            
+
         })
     }
 }
