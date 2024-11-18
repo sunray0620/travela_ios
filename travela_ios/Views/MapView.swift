@@ -9,21 +9,39 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
-    @State private var selectedDetent: PresentationDetent = .fraction(0.1)
+    
+    static let smallSheet : PresentationDetent = .fraction(0.1)
+    
+    @State private var selectedDetent: PresentationDetent = smallSheet
     
     var body: some View {
         AppleMapView()
         .sheet(isPresented: .constant(true), content: {
-            VStack{}
-                .frame(width: .infinity, height: 10)
+            VStack{
+                AudioTourListView(audioTourList: allAudioTourViewModels, selectedDetent: $selectedDetent)
+                    .disabled(selectedDetent == MapView.smallSheet)
+                    .scrollDisabled(selectedDetent != .large)
+                    .gesture(
+                        DragGesture().onChanged { value in
+                            if selectedDetent != .large && value.translation.height < 0 {
+                                // When dragging up, change detent to `.fraction(1)`
+                                selectedDetent = .large
+                            }
+                            if selectedDetent != MapView.smallSheet && value.translation.height > 0 {
+                                // When dragging up, change detent to `.fraction(1)`
+                                selectedDetent = MapView.smallSheet
+                            }
+                        }
+                    )
+            }
                 .interactiveDismissDisabled()
                 .presentationBackgroundInteraction(.enabled)
                 .presentationContentInteraction(.scrolls)
-                .presentationDetents([.fraction(0.1), .medium, .large], selection: $selectedDetent)
+                .presentationDetents([MapView.smallSheet, .medium, .large], selection: $selectedDetent)
                 .presentationDragIndicator(.visible)
                 .ignoresSafeArea()
             
-            AudioTourListView(audioTourList: allAudioTourViewModels, selectedDetent: $selectedDetent)
+            
         })
     }
 }
