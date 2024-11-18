@@ -10,8 +10,10 @@ import SwiftUI
 struct PlayingView: View {
 
     var body: some View {
-        Text("Playing View")
-        Text("TBD")
+        VStack {
+            Text("Playing View")
+            Text("TBD")
+        }
     }
 }
 

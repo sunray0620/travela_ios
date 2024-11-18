@@ -21,9 +21,9 @@ struct MapView: View {
                 .sheet(isPresented: $isSheetPresented, content: {
                     VStack{
                         AudioTourListView(audioTourList: audioTourViewModels, selectedDetent: $selectedDetent)
-                        // .disabled(selectedDetent == MapView.smallSheet)
-                        // .scrollDisabled(selectedDetent != .large)
-                            .disabled(selectedDetent != .large)
+                            // .disabled(selectedDetent == MapView.smallSheet)
+                            .scrollDisabled(selectedDetent != .large)
+                            // .disabled(selectedDetent != .large)
                     }
                     .interactiveDismissDisabled()
                     .presentationBackgroundInteraction(.enabled)
