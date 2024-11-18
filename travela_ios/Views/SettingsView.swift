@@ -12,21 +12,20 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("User Preferences")) {
-                    Text("Preferred Language")
-                    Picker("", selection: $preferredLanguage) {
-                        Text("English - USA").tag("en-US")
-                        Text("中文 - 中华人民共和国").tag("zh-CN")
+            VStack {
+                Form {
+                    Section(header: Text("User Preferences")) {
+                        Text("Preferred Language")
+                        Picker("", selection: $preferredLanguage) {
+                            Text("English - USA").tag("en-US")
+                            Text("中文 - 中华人民共和国").tag("zh-CN")
+                        }
+                        .pickerStyle(MenuPickerStyle())
                     }
-                    .pickerStyle(MenuPickerStyle())
                 }
+                Spacer()
             }
         }
-        
-        Spacer()
-        
-        ButtonsBarView(selectedView: "settings")
     }
 }
 
