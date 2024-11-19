@@ -9,10 +9,13 @@ import SwiftUI
 
 struct PlayingView: View {
 
+    @AppStorage("preferredLanguage") private var preferredLanguage: String = "en-US"
+    
     var body: some View {
         VStack {
             Text("Playing View")
             Text("TBD")
+            Text("\(preferredLanguage)")
         }
     }
 }

@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var preferredLanguage: String = "en-US"
+    
+    @AppStorage("preferredLanguage") private var preferredLanguage: String = "en-US"
     
     var body: some View {
         NavigationView {
