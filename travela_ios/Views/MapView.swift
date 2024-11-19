@@ -10,6 +10,7 @@ import MapKit
 
 struct MapView: View {
     static let smallSheet: PresentationDetent = .fraction(0)
+    @AppStorage("preferredLanguage") private var preferredLanguage: String = "en-US"
     
     @State private var selectedDetent: PresentationDetent = .medium
     @State private var isSheetPresented: Bool = true
@@ -42,11 +43,18 @@ struct MapView: View {
                 Text("Show the list")
             }
         }
+        .onAppear {
+            // updateAudioTourViewModels()
+        }
         
     }
     
     private func updateSheetPresentation() {
         isSheetPresented = (selectedDetent != MapView.smallSheet)
+    }
+    
+    private func updateAudioTourViewModels() {
+        audioTourViewModels = allAudioTourViewModels.filter { $0.language == preferredLanguage }
     }
 }
 
