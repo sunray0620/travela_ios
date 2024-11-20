@@ -8,6 +8,7 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
+import SwiftUI
 
 class AudioPlayer: ObservableObject {
     
@@ -67,6 +68,23 @@ class AudioPlayer: ObservableObject {
         }
     }
     
+    static func setNowPlayingInfo(audioTourViewModel: AudioTourViewModel) {
+        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        
+        var nowPlayingInfo = [String:Any]()
+        
+        let imageData = FileHelper.readDataFile(fileUrl: audioTourViewModel.imageFileUrl!)
+        if let image = UIImage(data: imageData) {
+            let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        }
+        
+        nowPlayingInfo[MPMediaItemPropertyTitle] = audioTourViewModel.name
+        nowPlayingInfo[MPMediaItemPropertyArtist] = audioTourViewModel.creator
+        
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+    }    
+    
     func setupRemoteControls() {
         let remoteCommandCenter = MPRemoteCommandCenter.shared()
         
@@ -85,32 +103,6 @@ class AudioPlayer: ObservableObject {
             return .success
         }
     }
-    
-    func setupNowPlayingInfo() {
-        var nowPlayingInfo: [String: Any] = [:]
-        
-        // Set metadata properties
-        nowPlayingInfo[MPMediaItemPropertyTitle] = "Sample Audio Title"
-        nowPlayingInfo[MPMediaItemPropertyArtist] = "Sample Artist"
-        
-        // Set artwork
-        if let artworkImage = UIImage(named: "artworkImage") {
-            let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in
-                return artworkImage
-            }
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
-        }
-        
-        // Set duration and playback rate
-        if let player = audioPlayer {
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = player.duration
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.isPlaying ? 1.0 : 0.0
-        }
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-    }
-    
     
     private func addTimeObserver() {
         let interval: CMTime = .init(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))

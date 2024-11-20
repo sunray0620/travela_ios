@@ -15,8 +15,13 @@ class AudioTourHelper {
     static let imageFolderName: String = "images"
     
     public static func prepareAudioTour(audioTourViewModel: inout AudioTourViewModel, forceRefresh: Bool) async {
-        // Check if we need to refresh the files
+        let audioTourId = audioTourViewModel.id
+        let localAudioFileUrl = getLocalAudioTourFileUrl(audioTourId: audioTourId)
+        let localImageFileUrl = getLocalImageFileUrl(audioTourId: audioTourId)
+        audioTourViewModel.imageFileUrl = localImageFileUrl
+        audioTourViewModel.audioFileUrl = localAudioFileUrl
         
+        // Check if we need to refresh the files
         if !checkIfNeedToRefreshAudioFiles(audioTourViewModel: audioTourViewModel, forceRefresh: forceRefresh) {
             return;
         }
@@ -25,11 +30,7 @@ class AudioTourHelper {
     }
     
     private static func checkIfNeedToRefreshAudioFiles(audioTourViewModel: AudioTourViewModel, forceRefresh: Bool) -> Bool {
-        let audioTourId = audioTourViewModel.id
-        let localAudioFileUrl = getLocalAudioTourFileUrl(audioTourId: audioTourId)
-        let localImageFileUrl = getLocalImageFileUrl(audioTourId: audioTourId)
-        
-        if !FileHelper.isFileExists(path: localAudioFileUrl) || !FileHelper.isFileExists(path: localImageFileUrl) {
+        if !FileHelper.isFileExists(path: audioTourViewModel.imageFileUrl!) || !FileHelper.isFileExists(path: audioTourViewModel.audioFileUrl!) {
             return true
         }
         
@@ -38,10 +39,6 @@ class AudioTourHelper {
     
     public static func downloadAudioTourFiles(audioTourViewModel: inout AudioTourViewModel) async {
         let audioTourId = audioTourViewModel.id
-        let localAudioFileUrl = getLocalAudioTourFileUrl(audioTourId: audioTourId)
-        let localImageFileUrl = getLocalImageFileUrl(audioTourId: audioTourId)
-        audioTourViewModel.imageFileUrl = localImageFileUrl
-        audioTourViewModel.audioFileUrl = localAudioFileUrl
         
         let imageGcsBlobName = "\(imageFolderName)/\(audioTourId).jpg"
         let imageContent = await downloadGcsBlob(blobName: imageGcsBlobName)
@@ -49,10 +46,10 @@ class AudioTourHelper {
         let audioContent = await downloadGcsBlob(blobName: audioGcsBlobName)
         
         if let data = Data(base64Encoded: imageContent!) {
-            FileHelper.writeDataFile(fileUrl: localImageFileUrl, data: data)
+            FileHelper.writeDataFile(fileUrl: audioTourViewModel.imageFileUrl!, data: data)
         }
         if let data = Data(base64Encoded: audioContent!) {
-            FileHelper.writeDataFile(fileUrl: localAudioFileUrl, data: data)
+            FileHelper.writeDataFile(fileUrl: audioTourViewModel.audioFileUrl!, data: data)
         }
     }
     

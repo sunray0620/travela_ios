@@ -143,6 +143,7 @@ struct AudioPlayerView: View {
                         await AudioTourHelper.prepareAudioTour(audioTourViewModel: &processedAudioTourViewModel, forceRefresh: refreshAudio)
                         self.audioTourViewModel = processedAudioTourViewModel
                         audioPlayer.setup(url: (self.audioTourViewModel?.audioFileUrl)!)
+                        AudioPlayer.setNowPlayingInfo(audioTourViewModel: self.audioTourViewModel!)
                         audioPlayer.play()
                     }
                     isLoading = false

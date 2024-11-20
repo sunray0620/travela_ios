@@ -33,7 +33,6 @@ struct ContentView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    print("Button 1 tapped")
                     selectedTab = 0
                 }) {
                     Image(systemName: "map.fill")
@@ -42,7 +41,6 @@ struct ContentView: View {
                 }
                 Spacer()
                 Button(action: {
-                    print("Button 2 tapped")
                     selectedTab = 1
                 }) {
                     Image(systemName: "magnifyingglass")
@@ -50,7 +48,6 @@ struct ContentView: View {
                 }
                 Spacer()
                 Button(action: {
-                    print("Button 3 tapped")
                     selectedTab = 2
                 }) {
                     Image(systemName: "location.fill")
@@ -58,7 +55,6 @@ struct ContentView: View {
                 }
                 Spacer()
                 Button(action: {
-                    print("Button 4 tapped")
                     selectedTab = 3
                 }) {
                     Image(systemName: "gearshape.fill")
