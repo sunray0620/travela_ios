@@ -29,9 +29,22 @@
 		A2DD29A72CD9F13C0000CF32 /* travela_iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = travela_iosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A2805BF02CED6C5200A71985 /* Exceptions for "travela_ios" folder in "travela_ios" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"travela-ios-Info.plist",
+			);
+			target = A2DD298C2CD9F13A0000CF32 /* travela_ios */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A2DD298F2CD9F13A0000CF32 /* travela_ios */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A2805BF02CED6C5200A71985 /* Exceptions for "travela_ios" folder in "travela_ios" target */,
+			);
 			path = travela_ios;
 			sourceTree = "<group>";
 		};
@@ -399,6 +412,7 @@
 				DEVELOPMENT_TEAM = 45CQF9HPMA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "travela-ios-Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your position to find interesting places around you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -429,6 +443,7 @@
 				DEVELOPMENT_TEAM = 45CQF9HPMA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "travela-ios-Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your position to find interesting places around you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -136,21 +136,16 @@ struct AudioPlayerView: View {
                 }
             }
             .onAppear {
-                do {
-                    isLoading = true
-                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                    Task {
-                        if let originalAudioTourViewModel = self.originalAudioTourViewModel {
-                            var processedAudioTourViewModel = originalAudioTourViewModel
-                            await AudioTourHelper.prepareAudioTour(audioTourViewModel: &processedAudioTourViewModel, forceRefresh: refreshAudio)
-                            self.audioTourViewModel = processedAudioTourViewModel
-                            audioPlayer.setup(url: (self.audioTourViewModel?.audioFileUrl)!)
-                            audioPlayer.play()
-                        }
+                isLoading = true
+                Task {
+                    if let originalAudioTourViewModel = self.originalAudioTourViewModel {
+                        var processedAudioTourViewModel = originalAudioTourViewModel
+                        await AudioTourHelper.prepareAudioTour(audioTourViewModel: &processedAudioTourViewModel, forceRefresh: refreshAudio)
+                        self.audioTourViewModel = processedAudioTourViewModel
+                        audioPlayer.setup(url: (self.audioTourViewModel?.audioFileUrl)!)
+                        audioPlayer.play()
                     }
                     isLoading = false
-                } catch {
-                    print ("error setting audio session category: \(error)")
                 }
             }
         }

@@ -24,6 +24,7 @@ class AudioPlayer: ObservableObject {
         self.isPlaying = false
         self.duration = (player?.currentItem?.asset.duration.seconds)!
         
+        self.setupAudioSession()
         self.setupRemoteControls()
     }
     
@@ -57,6 +58,15 @@ class AudioPlayer: ObservableObject {
         player?.seek(to: time)
     }
     
+    func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to set up audio session: \(error.localizedDescription)")
+        }
+    }
+    
     func setupRemoteControls() {
         let remoteCommandCenter = MPRemoteCommandCenter.shared()
         
@@ -75,6 +85,32 @@ class AudioPlayer: ObservableObject {
             return .success
         }
     }
+    
+    func setupNowPlayingInfo() {
+        var nowPlayingInfo: [String: Any] = [:]
+        
+        // Set metadata properties
+        nowPlayingInfo[MPMediaItemPropertyTitle] = "Sample Audio Title"
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "Sample Artist"
+        
+        // Set artwork
+        if let artworkImage = UIImage(named: "artworkImage") {
+            let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in
+                return artworkImage
+            }
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        }
+        
+        // Set duration and playback rate
+        if let player = audioPlayer {
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = player.duration
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.isPlaying ? 1.0 : 0.0
+        }
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    
     
     private func addTimeObserver() {
         let interval: CMTime = .init(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
