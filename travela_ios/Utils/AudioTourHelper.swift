@@ -6,24 +6,34 @@
 //
 
 import Foundation
+import SwiftUI
+
 
 class AudioTourHelper {
-    
+
     static let audioFolderName: String = "audios"
     static let imageFolderName: String = "images"
     
-    public static func prepareAudioTour(audioTourViewModel: inout AudioTourViewModel) async {
-        let audioTourId = audioTourViewModel.id
+    public static func prepareAudioTour(audioTourViewModel: inout AudioTourViewModel, forceRefresh: Bool) async {
         // Check if we need to refresh the files
-        if !checkIfNeedToRefreshAudioFiles(audioTourId: audioTourId) {
+        
+        if !checkIfNeedToRefreshAudioFiles(audioTourViewModel: audioTourViewModel, forceRefresh: forceRefresh) {
             return;
         }
         // Refresh all files
         await downloadAudioTourFiles(audioTourViewModel: &audioTourViewModel)
     }
     
-    private static func checkIfNeedToRefreshAudioFiles(audioTourId: String) -> Bool {
-        return true
+    private static func checkIfNeedToRefreshAudioFiles(audioTourViewModel: AudioTourViewModel, forceRefresh: Bool) -> Bool {
+        let audioTourId = audioTourViewModel.id
+        let localAudioFileUrl = getLocalAudioTourFileUrl(audioTourId: audioTourId)
+        let localImageFileUrl = getLocalImageFileUrl(audioTourId: audioTourId)
+        
+        if !FileHelper.isFileExists(path: localAudioFileUrl) || !FileHelper.isFileExists(path: localImageFileUrl) {
+            return true
+        }
+        
+        return forceRefresh
     }
     
     public static func downloadAudioTourFiles(audioTourViewModel: inout AudioTourViewModel) async {
@@ -33,9 +43,6 @@ class AudioTourHelper {
         audioTourViewModel.imageFileUrl = localImageFileUrl
         audioTourViewModel.audioFileUrl = localAudioFileUrl
         
-        if FileHelper.isFileExists(path: localAudioFileUrl) && FileHelper.isFileExists(path: localImageFileUrl) {
-            return
-        }
         let imageGcsBlobName = "\(imageFolderName)/\(audioTourId).jpg"
         let imageContent = await downloadGcsBlob(blobName: imageGcsBlobName)
         let audioGcsBlobName = "\(audioFolderName)/\(audioTourId).mp3"
